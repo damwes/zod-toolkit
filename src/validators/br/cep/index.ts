@@ -1,21 +1,28 @@
 import { z } from "zod";
 
-import type { _Params } from "@/types";
-import { defaultParams } from "./locale";
+import type { _StepParams } from "@/types";
+import { withSteps } from "@/utils/steps";
+import { defaultMessages, type CepStep } from "./locale";
 
-function isValidCEP(value: string): boolean {
-  const cep = value.replace(/\D/g, "");
+const digits = (value: string) => value.replace(/\D/g, "");
 
-  if (!/^\d{8}$/.test(cep)) return false;
-  if (/^(\d)\1{7}$/.test(cep)) return false; // ex: 11111111, 00000000, 99999999
+const isFormatValid = (value: string) => /^\d{5}-?\d{3}$/.test(value);
 
-  const cepNum = parseInt(cep, 10);
-  if (cepNum < 1000000 || cepNum > 98999999) return false;
+const isNotRepeated = (value: string) => !/^(\d)\1{7}$/.test(digits(value)); // ex: 11111111, 00000000, 99999999
 
-  return true;
-}
+const isInRange = (value: string) => {
+  const cepNumber = parseInt(digits(value), 10);
+  return cepNumber >= 1000000 && cepNumber <= 98999999;
+};
 
-export const cep = (params: _Params = defaultParams) =>
-  z
-    .string()
-    .refine((val) => /^\d{5}-?\d{3}$/.test(val) && isValidCEP(val), params);
+export const cep = (params: _StepParams<CepStep> = {}) =>
+  withSteps(
+    z.string(),
+    [
+      { name: "format", check: isFormatValid },
+      { name: "repeated", check: isNotRepeated },
+      { name: "range", check: isInRange },
+    ],
+    defaultMessages,
+    params
+  );

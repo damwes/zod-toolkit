@@ -29,7 +29,7 @@ describe("ZIP Code (CEP)", () => {
 
   it("returns default error message in English", () => {
     const result = z.br.cep().safeParse("111");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "Invalid CEP: must be 8 digits in the format 00000-000 or 00000000.",
     ]);
   });
@@ -37,13 +37,46 @@ describe("ZIP Code (CEP)", () => {
   it("returns localized error message in Portuguese", () => {
     z.locale.set("pt");
     const result = z.br.cep().safeParse("111");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "CEP inválido: deve conter 8 dígitos no formato 00000-000 ou 00000000.",
     ]);
   });
 
   it("returns custom error message when provided", () => {
     const result = z.br.cep({ error: "Custom CEP error" }).safeParse("111");
-    expect(result.error!.flatten().formErrors).toEqual(["Custom CEP error"]);
+    expect(z.treeifyError(result.error!).errors).toEqual(["Custom CEP error"]);
+  });
+
+  describe("steps", () => {
+    const reportStep = { error: (issue: any) => issue.params?.step as string };
+    const failedSteps = (value: string) =>
+      z.br.cep(reportStep).safeParse(value).error!.issues.map((issue: any) => issue.params?.step);
+
+    it("fails on `format` for malformed values", () => {
+      expect(failedSteps("111")).toEqual(["format"]);
+    });
+
+    it("fails on `repeated` for repeated digits", () => {
+      expect(failedSteps("11111-111")).toEqual(["repeated"]);
+    });
+
+    it("fails on `range` for out-of-range values", () => {
+      expect(failedSteps("00100-000")).toEqual(["range"]);
+    });
+
+    it("returns a specific default message per step", () => {
+      expect(
+        z.treeifyError(z.br.cep().safeParse("00100-000").error!).errors
+      ).toEqual(["Invalid CEP: out of the valid range (01000-000 to 98999-999)."]);
+      z.locale.set("pt");
+      expect(
+        z.treeifyError(z.br.cep().safeParse("11111-111").error!).errors
+      ).toEqual(["CEP inválido: dígitos repetidos não são permitidos."]);
+    });
+
+    it("lets `errors` override a single step", () => {
+      const schema = z.br.cep({ errors: { range: "Out of range" } });
+      expect(z.treeifyError(schema.safeParse("00100-000").error!).errors).toEqual(["Out of range"]);
+    });
   });
 });
