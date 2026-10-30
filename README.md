@@ -6,10 +6,10 @@ Stop rewriting validators. Ship production-ready schemas with Zod Toolkit. 🚀
 
 ## Features
 
-* Validation integrated with Zod v4
-* +10 schema common ready-to-use validations
-* Ready for Node.js, React, Next.js, NestJS, etc.
-* Easy to import and use directly with Zod schemas
+- Validation integrated with Zod v4
+- +10 schema common ready-to-use validations
+- Ready for Node.js, React, Next.js, NestJS, etc.
+- Easy to import and use directly with Zod schemas
 
 Built to enhance [Zod](https://zod.dev/) standard validations, `zod-toolkit` integrates seamlessly into your projects the same way you’d use Zod.
 
@@ -31,27 +31,27 @@ pnpm add zod-toolkit
 
 ### Global
 
-| Schema | Usage | Description |
-|--------|-------|-------------|
-| `fullname` | `z.fullname()` | Validates full names (first and last name required, no numbers) |
-| `username` | `z.username()` | Validates usernames (3–20 chars, alphanumeric with `.` and `_`) |
-| `otp` | `z.otp(length?)` | Validates one-time passwords with a given digit length (default: 6) |
-| `nodeEnv` | `z.nodeEnv()` | Validates Node.js environment (`production`, `development`, `test`, `staging`) |
-| `port` | `z.port()` | Validates port numbers as string (0–65535) |
+| Schema     | Usage            | Description                                                                    |
+| ---------- | ---------------- | ------------------------------------------------------------------------------ |
+| `fullname` | `z.fullname()`   | Validates full names (first and last name required, no numbers)                |
+| `username` | `z.username()`   | Validates usernames (3–20 chars, alphanumeric with `.` and `_`)                |
+| `otp`      | `z.otp(length?)` | Validates one-time passwords with a given digit length (default: 6)            |
+| `nodeEnv`  | `z.nodeEnv()`    | Validates Node.js environment (`production`, `development`, `test`, `staging`) |
+| `port`     | `z.port()`       | Validates port numbers as string (0–65535)                                     |
 
 ### Coerce
 
-| Schema | Usage | Description |
-|--------|-------|-------------|
+| Schema | Usage             | Description                                            |
+| ------ | ----------------- | ------------------------------------------------------ |
 | `port` | `z.coerce.port()` | Validates and coerces port numbers as number (0–65535) |
 
 ### Brazil (`z.br`)
 
-| Schema | Usage | Description |
-|--------|-------|-------------|
-| `cpf` | `z.br.cpf()` | Validates CPF numbers (`000.000.000-00` or `00000000000`) |
+| Schema | Usage         | Description                                                                                    |
+| ------ | ------------- | ---------------------------------------------------------------------------------------------- |
+| `cpf`  | `z.br.cpf()`  | Validates CPF numbers (`000.000.000-00` or `00000000000`)                                      |
 | `cnpj` | `z.br.cnpj()` | Validates numeric and alphanumeric CNPJs (`AA.AAA.AAA/AAAA-00` or `AAAAAAAAAAAA00`, uppercase) |
-| `cep` | `z.br.cep()` | Validates CEP postal codes (`00000-000` or `00000000`) |
+| `cep`  | `z.br.cep()`  | Validates CEP postal codes (`00000-000` or `00000000`)                                         |
 
 ## Basic usage
 
@@ -64,7 +64,7 @@ const Customer = z.object({
   username: z.username(),
   oneTimePassword: z.otp(6),
   cpf: z.br.cpf(),
-  cnpj: z.br.cnpj()
+  cnpj: z.br.cnpj(),
 });
 
 type CustomerSchema = z.infer<typeof Customer>;
@@ -144,25 +144,26 @@ Unknown step names are a compile-time error.
 
 Zod Toolkit locale support is powered by Zod v4's locale system. The following locales are available:
 
-| Code | Language | Code | Language | Code | Language |
-|------|----------|------|----------|------|----------|
-| `ar` | Arabic | `he` | Hebrew | `no` | Norwegian |
-| `az` | Azerbaijani | `hu` | Hungarian | `ota` | Ottoman Turkish |
-| `be` | Belarusian | `id` | Indonesian | `pl` | Polish |
-| `bg` | Bulgarian | `is` | Icelandic | `ps` | Pashto |
-| `ca` | Catalan | `it` | Italian | `pt` | Portuguese |
-| `cs` | Czech | `ja` | Japanese | `ru` | Russian |
-| `da` | Danish | `ka` | Georgian | `sl` | Slovenian |
-| `de` | German | `kh` | Khmer | `sv` | Swedish |
-| `en` | English | `km` | Khmer | `ta` | Tamil |
-| `eo` | Esperanto | `ko` | Korean | `th` | Thai |
-| `es` | Spanish | `lt` | Lithuanian | `tr` | Turkish |
-| `fa` | Persian | `mk` | Macedonian | `ua` | Ukrainian |
-| `fi` | Finnish | `ms` | Malay | `uk` | Ukrainian |
-| `fr` | French | `nl` | Dutch | `ur` | Urdu |
-| `frCA` | French (Canada) | | | `vi` | Vietnamese |
-| | | | | `yo` | Yoruba |
-| | | | | `zhCN` | Chinese (Simplified) |
-| | | | | `zhTW` | Chinese (Traditional) |
+| Code   | Language        | Code | Language   | Code   | Language              |
+| ------ | --------------- | ---- | ---------- | ------ | --------------------- |
+| `ar`   | Arabic          | `he` | Hebrew     | `no`   | Norwegian             |
+| `az`   | Azerbaijani     | `hu` | Hungarian  | `ota`  | Ottoman Turkish       |
+| `be`   | Belarusian      | `id` | Indonesian | `pl`   | Polish                |
+| `bg`   | Bulgarian       | `is` | Icelandic  | `ps`   | Pashto                |
+| `ca`   | Catalan         | `it` | Italian    | `pt`   | Portuguese            |
+| `cs`   | Czech           | `ja` | Japanese   | `ru`   | Russian               |
+| `da`   | Danish          | `ka` | Georgian   | `sl`   | Slovenian             |
+| `de`   | German          | `kh` | Khmer      | `sv`   | Swedish               |
+| `en`   | English         | `km` | Khmer      | `ta`   | Tamil                 |
+| `eo`   | Esperanto       | `ko` | Korean     | `th`   | Thai                  |
+| `es`   | Spanish         | `lt` | Lithuanian | `tr`   | Turkish               |
+| `fa`   | Persian         | `mk` | Macedonian | `ua`   | Ukrainian             |
+| `fi`   | Finnish         | `ms` | Malay      | `uk`   | Ukrainian             |
+| `fr`   | French          | `nl` | Dutch      | `ur`   | Urdu                  |
+| `frCA` | French (Canada) |      |            | `vi`   | Vietnamese            |
+|        |                 |      |            | `yo`   | Yoruba                |
+|        |                 |      |            | `zhCN` | Chinese (Simplified)  |
+|        |                 |      |            | `zhTW` | Chinese (Traditional) |
 
-> **Note:** Zod Toolkit currently ships custom error messages in `en` and `pt`. For other locales, Zod's built-in messages will be localized, but Zod Toolkit's custom schema messages will fall back to English. Contributions for additional translations are welcome!
+> [!NOTE]
+> Zod Toolkit currently ships custom error messages in `en` and `pt`. For other locales, Zod's built-in messages will be localized, but Zod Toolkit's custom schema messages will fall back to English. Contributions for additional translations are welcome!
