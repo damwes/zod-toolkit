@@ -25,7 +25,7 @@ describe("NODE_ENV", () => {
 
   it("returns default error message in English", () => {
     const result = z.nodeEnv().safeParse("invalid");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "Invalid NODE_ENV: must be one of production, development, test, or staging.",
     ]);
   });
@@ -33,13 +33,13 @@ describe("NODE_ENV", () => {
   it("returns localized error message in Portuguese", () => {
     z.locale.set("pt");
     const result = z.nodeEnv().safeParse("invalid");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "NODE_ENV inválido: deve ser production, development, test ou staging.",
     ]);
   });
 
   it("returns custom error message when provided", () => {
     const result = z.nodeEnv({ error: "Custom NODE_ENV error" }).safeParse("invalid");
-    expect(result.error!.flatten().formErrors).toEqual(["Custom NODE_ENV error"]);
+    expect(z.treeifyError(result.error!).errors).toEqual(["Custom NODE_ENV error"]);
   });
 });

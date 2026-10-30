@@ -25,7 +25,7 @@ describe("OTP", () => {
 
   it("returns default error message in English", () => {
     const result = z.otp().safeParse("abc");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "Invalid OTP: must contain only digits.",
     ]);
   });
@@ -33,13 +33,13 @@ describe("OTP", () => {
   it("returns localized error message in Portuguese", () => {
     z.locale.set("pt");
     const result = z.otp().safeParse("abc");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "OTP inválido: deve conter apenas dígitos.",
     ]);
   });
 
   it("returns custom error message when provided", () => {
     const result = z.otp(6, { error: "Custom OTP error" }).safeParse("abc");
-    expect(result.error!.flatten().formErrors).toEqual(["Custom OTP error"]);
+    expect(z.treeifyError(result.error!).errors).toEqual(["Custom OTP error"]);
   });
 });

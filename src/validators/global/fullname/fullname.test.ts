@@ -31,7 +31,7 @@ describe("Fullname", () => {
 
   it("returns default error message in English", () => {
     const result = z.fullname().safeParse("John");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "Invalid full name: must include first and last name.",
     ]);
   });
@@ -39,13 +39,13 @@ describe("Fullname", () => {
   it("returns localized error message in Portuguese", () => {
     z.locale.set("pt");
     const result = z.fullname().safeParse("John");
-    expect(result.error!.flatten().formErrors).toEqual([
+    expect(z.treeifyError(result.error!).errors).toEqual([
       "Nome completo inválido: deve incluir nome e sobrenome.",
     ]);
   });
 
   it("returns custom error message when provided", () => {
     const result = z.fullname({ error: "Enter full name" }).safeParse("John");
-    expect(result.error!.flatten().formErrors).toEqual(["Enter full name"]);
+    expect(z.treeifyError(result.error!).errors).toEqual(["Enter full name"]);
   });
 });
