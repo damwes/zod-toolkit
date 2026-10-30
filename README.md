@@ -31,19 +31,35 @@ pnpm add zod-toolkit
 
 ### Global
 
-| Schema     | Usage            | Description                                                                    |
-| ---------- | ---------------- | ------------------------------------------------------------------------------ |
-| `fullname` | `z.fullname()`   | Validates full names (first and last name required, no numbers)                |
-| `username` | `z.username()`   | Validates usernames (3–20 chars, alphanumeric with `.` and `_`)                |
-| `otp`      | `z.otp(length?)` | Validates one-time passwords with a given digit length (default: 6)            |
-| `nodeEnv`  | `z.nodeEnv()`    | Validates Node.js environment (`production`, `development`, `test`, `staging`) |
-| `port`     | `z.port()`       | Validates port numbers as string (0–65535)                                     |
+| Schema        | Usage             | Description                                                                    |
+| ------------- | ----------------- | ------------------------------------------------------------------------------ |
+| `fullname`    | `z.fullname()`    | Validates full names (first and last name required, no numbers)                |
+| `username`    | `z.username()`    | Validates usernames (3–20 chars, alphanumeric with `.` and `_`)                |
+| `otp`         | `z.otp(length?)`  | Validates one-time passwords with a given digit length (default: 6)            |
+| `nodeEnv`     | `z.nodeEnv()`     | Validates Node.js environment (`production`, `development`, `test`, `staging`) |
+| `port`        | `z.port()`        | Validates port numbers as string (0–65535)                                     |
+| `logLevel`    | `z.logLevel()`    | Validates log levels (`trace`, `debug`, `info`, `warn`, `error`, `fatal`)      |
+| `hostname`    | `z.hostname()`    | Validates hostnames and IPv4/IPv6 addresses (extends Zod's `z.hostname()`)     |
+| `databaseUrl` | `z.databaseUrl()` | Validates database URLs (`postgres`, `mysql`, `mongodb`, `redis`)              |
+| `duration`    | `z.duration()`    | Validates durations like `10s` or `5m` and transforms them into milliseconds   |
+| `csv`         | `z.csv(item?)`    | Splits a comma-separated string into an array, validating each item            |
+| `password`    | `z.password()`    | Validates passwords (8+ chars, lower/upper case, number and symbol)            |
+| `slug`        | `z.slug()`        | Validates kebab-case slugs                                                     |
+| `hexColor`    | `z.hexColor()`    | Validates hex colors (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`)                 |
+| `semver`      | `z.semver()`      | Validates SemVer 2.0.0 versions                                                |
+
+> [!NOTE]
+> `z.hostname()` and `z.coerce.boolean()` replace the Zod schemas with the same name.
+>
+> - `z.hostname()` keeps accepting domain names (`localhost`, `example.com`, `example.com.`) and IPv4, and additionally accepts IPv6 (`::1`) and bracketed IPv6 (`[::1]`). It rejects dotted numbers such as `256.1.1.1` or `1.2.3`, which Zod's `z.hostname()` accepts: per RFC 3696 the last label of a hostname cannot be all digits, and such a string is read as an IPv4 address, not a name.
+> - `z.coerce.boolean()` accepts `true/false`, `1/0`, `yes/no` and `on/off` (case-insensitive) and rejects anything else, so `"false"` becomes `false` instead of `true`.
 
 ### Coerce
 
-| Schema | Usage             | Description                                            |
-| ------ | ----------------- | ------------------------------------------------------ |
-| `port` | `z.coerce.port()` | Validates and coerces port numbers as number (0–65535) |
+| Schema    | Usage                | Description                                                          |
+| --------- | -------------------- | -------------------------------------------------------------------- |
+| `port`    | `z.coerce.port()`    | Validates and coerces port numbers as number (0–65535)               |
+| `boolean` | `z.coerce.boolean()` | Coerces env-style booleans (`true/false`, `1/0`, `yes/no`, `on/off`) |
 
 ### Brazil (`z.br`)
 
