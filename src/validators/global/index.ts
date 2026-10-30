@@ -8,3 +8,4 @@ export * from "./hostname";
 export * from "./database-url";
 export * from "./duration";
 export * from "./csv";
+export * from "./password";
