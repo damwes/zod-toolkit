@@ -12,6 +12,20 @@ describe("CNPJ", () => {
     expect(z.br.cnpj().parse("12345678000195")).toBe("12345678000195");
   });
 
+  it("accepts valid alphanumeric CNPJs", () => {
+    expect(z.br.cnpj().parse("12.ABC.345/01DE-35")).toBe("12.ABC.345/01DE-35");
+    expect(z.br.cnpj().parse("12ABC34501DE35")).toBe("12ABC34501DE35");
+  });
+
+  it("rejects invalid alphanumeric CNPJs", () => {
+    expect(() => z.br.cnpj().parse("12.ABC.345/01DE-36")).toThrow();
+    expect(() => z.br.cnpj().parse("12ABC34501DE36")).toThrow();
+    expect(() => z.br.cnpj().parse("12abc34501de35")).toThrow();
+    expect(() => z.br.cnpj().parse("12ABC34501DEA5")).toThrow();
+    expect(() => z.br.cnpj().parse("12ABC34501DE3A")).toThrow();
+    expect(() => z.br.cnpj().parse("12.ABC.345/01DE35")).toThrow();
+  });
+
   it("rejects invalid CNPJs", () => {
     expect(() => z.br.cnpj().parse("11.111.111/1111-11")).toThrow();
     expect(() => z.br.cnpj().parse("00000000000000")).toThrow();
@@ -29,7 +43,7 @@ describe("CNPJ", () => {
   it("returns default error message in English", () => {
     const result = z.br.cnpj().safeParse("111");
     expect(result.error!.flatten().formErrors).toEqual([
-      "Invalid CNPJ: must be 14 digits in the format 00.000.000/0000-00 or 00000000000000.",
+      "Invalid CNPJ: must be 14 alphanumeric characters in the format AA.AAA.AAA/AAAA-00 or AAAAAAAAAAAA00.",
     ]);
   });
 
@@ -37,7 +51,7 @@ describe("CNPJ", () => {
     z.locale.set("pt");
     const result = z.br.cnpj().safeParse("111");
     expect(result.error!.flatten().formErrors).toEqual([
-      "CNPJ inválido: deve conter 14 dígitos no formato 00.000.000/0000-00 ou 00000000000000.",
+      "CNPJ inválido: deve conter 14 caracteres alfanuméricos no formato AA.AAA.AAA/AAAA-00 ou AAAAAAAAAAAA00.",
     ]);
   });
 

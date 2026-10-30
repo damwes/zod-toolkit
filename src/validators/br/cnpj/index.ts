@@ -4,17 +4,18 @@ import type { _Params } from "@/types";
 import { defaultParams } from "./locale";
 
 function isValidCNPJ(value: string): boolean {
-  const regex = /^(\d{14}|\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})$/;
+  const regex =
+    /^([0-9A-Z]{12}\d{2}|[0-9A-Z]{2}\.[0-9A-Z]{3}\.[0-9A-Z]{3}\/[0-9A-Z]{4}-\d{2})$/;
   if (!regex.test(value)) return false;
 
-  const cnpj = value.replace(/\D/g, "");
+  const cnpj = value.replace(/[./-]/g, "");
 
   if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
   const calcCheckDigit = (base: string, factors: number[]): number => {
     let total = 0;
     for (let i = 0; i < base.length; i++) {
-      total += parseInt(base[i]!, 10) * factors[i]!;
+      total += (base.charCodeAt(i) - 48) * factors[i]!;
     }
     const remainder = total % 11;
     return remainder < 2 ? 0 : 11 - remainder;
