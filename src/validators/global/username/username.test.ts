@@ -32,21 +32,58 @@ describe("Username", () => {
 
   it("returns default error message in English", () => {
     const result = z.username().safeParse("a!");
-    expect(result.error!.flatten().formErrors).toEqual([
-      "Invalid username: must be 3–20 characters, start with a letter, and contain only letters, numbers, dots, or underscores.",
+    expect(z.treeifyError(result.error!).errors).toEqual([
+      "Invalid username: must be 3–20 characters long.",
     ]);
   });
 
   it("returns localized error message in Portuguese", () => {
     z.locale.set("pt");
     const result = z.username().safeParse("a!");
-    expect(result.error!.flatten().formErrors).toEqual([
-      "Usuário inválido: deve ter 3–20 caracteres, iniciar com letra e conter apenas letras, números, pontos ou underscores.",
+    expect(z.treeifyError(result.error!).errors).toEqual([
+      "Usuário inválido: deve ter entre 3 e 20 caracteres.",
     ]);
   });
 
   it("returns custom error message when provided", () => {
-    const result = z.username({ error: "Custom username error" }).safeParse("a!");
-    expect(result.error!.flatten().formErrors).toEqual(["Custom username error"]);
+    const result = z
+      .username({ error: "Custom username error" })
+      .safeParse("a!");
+    expect(z.treeifyError(result.error!).errors).toEqual([
+      "Custom username error",
+    ]);
+  });
+
+  describe("steps", () => {
+    const reportStep = { error: (issue: any) => issue.params?.step as string };
+    const failedSteps = (value: string) =>
+      z
+        .username(reportStep)
+        .safeParse(value)
+        .error!.issues.map((issue: any) => issue.params?.step);
+
+    it("fails on `length` for too short or too long values", () => {
+      expect(failedSteps("a!")).toEqual(["length"]);
+      expect(failedSteps("a".repeat(21))).toEqual(["length"]);
+    });
+
+    it("fails on `charset` for invalid characters", () => {
+      expect(failedSteps("abcd!")).toEqual(["charset"]);
+    });
+
+    it("returns a specific default message per step", () => {
+      expect(
+        z.treeifyError(z.username().safeParse("abcd!").error!).errors
+      ).toEqual([
+        "Invalid username: must start with a letter, end with a letter or number, and contain only letters, numbers, dots, or underscores (no consecutive dots or underscores).",
+      ]);
+    });
+
+    it("lets `errors` override a single step", () => {
+      const schema = z.username({ errors: { charset: "Bad characters" } });
+      expect(z.treeifyError(schema.safeParse("abcd!").error!).errors).toEqual([
+        "Bad characters",
+      ]);
+    });
   });
 });
