@@ -50,7 +50,7 @@ pnpm add zod-toolkit
 | Schema | Usage | Description |
 |--------|-------|-------------|
 | `cpf` | `z.br.cpf()` | Validates CPF numbers (`000.000.000-00` or `00000000000`) |
-| `cnpj` | `z.br.cnpj()` | Validates CNPJ numbers (`00.000.000/0000-00` or `00000000000000`) |
+| `cnpj` | `z.br.cnpj()` | Validates numeric and alphanumeric CNPJs (`AA.AAA.AAA/AAAA-00` or `AAAAAAAAAAAA00`, uppercase) |
 | `cep` | `z.br.cep()` | Validates CEP postal codes (`00000-000` or `00000000`) |
 
 ## Basic usage
