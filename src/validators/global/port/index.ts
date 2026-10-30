@@ -1,18 +1,29 @@
 import { z } from "zod";
 
-import type { _Params } from "@/types";
-import { defaultParams } from "./locale";
+import type { _StepParams } from "@/types";
+import { withSteps } from "@/utils/steps";
+import { defaultMessages, type PortStep } from "./locale";
 
-export const port = (params: _Params = defaultParams) => {
-  return z.string().refine((val) => {
-    if (!/^\d+$/.test(val)) return false;
-    const num = Number(val);
-    return num >= 0 && num <= 65535;
-  }, params);
-};
+const inRange = (num: number) => num >= 0 && num <= 65535;
 
-export const portNumber = (params: _Params = defaultParams) => {
-  return z.coerce.number().refine((val) => {
-    return Number.isInteger(val) && val >= 0 && val <= 65535;
-  }, params);
-};
+export const port = (params: _StepParams<PortStep> = {}) =>
+  withSteps(
+    z.string(),
+    [
+      { name: "format", check: (value: string) => /^\d+$/.test(value) },
+      { name: "range", check: (value: string) => inRange(Number(value)) },
+    ],
+    defaultMessages,
+    params
+  );
+
+export const portNumber = (params: _StepParams<PortStep> = {}) =>
+  withSteps(
+    z.coerce.number(),
+    [
+      { name: "format", check: (value: number) => Number.isInteger(value) },
+      { name: "range", check: inRange },
+    ],
+    defaultMessages,
+    params
+  );
