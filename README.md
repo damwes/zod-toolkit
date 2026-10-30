@@ -101,12 +101,12 @@ import { z } from "zod-toolkit";
 const schema = z.br.cpf();
 
 // Default (English)
-schema.safeParse("invalid").error.flatten().formErrors;
+z.treeifyError(schema.safeParse("invalid").error).errors;
 // ["Invalid CPF: must be 11 digits in the format 000.000.000-00 or 00000000000."]
 
 // Switch to Portuguese
 z.locale.set("pt");
-schema.safeParse("invalid").error.flatten().formErrors;
+z.treeifyError(schema.safeParse("invalid").error).errors;
 // ["CPF inválido: deve conter 11 dígitos no formato 000.000.000-00 ou 00000000000."]
 ```
 
@@ -119,6 +119,26 @@ z.br.cpf({ error: "Please enter a valid CPF" });
 z.otp(6, { error: "Invalid code" });
 z.username({ error: "Choose a valid username" });
 ```
+
+### Per-step error messages
+
+Composite validators run as an ordered, fail-fast sequence of named steps, each with its own localized message:
+
+| Validator             | Steps (in order)                     |
+| --------------------- | ------------------------------------ |
+| `br.cnpj`, `br.cpf`   | `format` → `repeated` → `checkDigit` |
+| `br.cep`              | `format` → `repeated` → `range`      |
+| `username`            | `length` → `charset`                 |
+| `port`, `coerce.port` | `format` → `range`                   |
+
+Override individual steps with `errors`. Precedence: `errors[step]` > `error` > localized default.
+
+```ts
+z.br.cnpj({ errors: { checkDigit: "Check the last two digits" } });
+z.br.cpf({ error: (issue) => `Failed at: ${issue.params?.step}` });
+```
+
+Unknown step names are a compile-time error.
 
 ### Supported locales
 
