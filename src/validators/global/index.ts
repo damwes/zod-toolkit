@@ -10,3 +10,4 @@ export * from "./duration";
 export * from "./csv";
 export * from "./password";
 export * from "./slug";
+export * from "./hex-color";
