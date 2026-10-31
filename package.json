@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wesleydmscn/zod-toolkit.git"
+    "url": "git+https://github.com/damwes/zod-toolkit.git"
   },
   "keywords": [
     "schema-validation",
@@ -35,9 +35,9 @@
   "author": "Wesley Damasceno",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wesleydmscn/zod-toolkit/issues"
+    "url": "https://github.com/damwes/zod-toolkit/issues"
   },
-  "homepage": "https://github.com/wesleydmscn/zod-toolkit#readme",
+  "homepage": "https://github.com/damwes/zod-toolkit#readme",
   "dependencies": {
     "zod": "^4.1.12"
   },
