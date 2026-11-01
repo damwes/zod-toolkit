@@ -1,4 +1,4 @@
-<img width="160" height="160" alt="image" src=".github/assets/zod-toolkit.png" />
+<img width="157" height="124" alt="image" src=".github/assets/zod-toolkit.png" />
 
 # Zod Toolkit
 
